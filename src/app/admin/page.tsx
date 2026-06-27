@@ -20,7 +20,8 @@ import {
   Trash2,
   ChevronUp,
   ChevronDown,
-  ChevronsUpDown
+  ChevronsUpDown,
+  MessageSquare
 } from "lucide-react";
 import { PARTICIPANT_ROLES } from "@/lib/roles";
 
@@ -48,6 +49,7 @@ export default function AdminDashboard() {
   const [loginError, setLoginError] = useState("");
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [nameSort, setNameSort] = useState<"asc" | "desc" | null>(null);
+  const [contactUnread, setContactUnread] = useState(0);
 
   // Check session storage on mount
   useEffect(() => {
@@ -77,6 +79,17 @@ export default function AdminDashboard() {
       setIsAuthenticated(true);
       sessionStorage.setItem("admin_password", pwdToVerify);
       setPassword(pwdToVerify);
+
+      // Pull the unread contact-message count for the header badge (best-effort).
+      try {
+        const cRes = await fetch("/api/admin/contact", { headers: { Authorization: pwdToVerify } });
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          setContactUnread((cData.messages || []).filter((m: { is_read?: boolean }) => !m.is_read).length);
+        }
+      } catch {
+        // Non-critical: the badge simply won't show a count.
+      }
     } catch (err: any) {
       setLoginError(err.message || "Giriş başarısız oldu.");
       sessionStorage.removeItem("admin_password");
@@ -320,6 +333,17 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push("/admin/contact")}
+              className="relative flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-400 rounded-xl border border-emerald-800/40 text-xs font-bold transition-all"
+            >
+              <MessageSquare size={14} /> İletişim Mesajları
+              {contactUnread > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-[#8BE92C] text-zinc-950 text-[10px] font-black rounded-full">
+                  {contactUnread}
+                </span>
+              )}
+            </button>
             <button
               onClick={() => router.push("/admin/sponsors")}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-400 rounded-xl border border-emerald-800/40 text-xs font-bold transition-all"

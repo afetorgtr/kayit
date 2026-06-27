@@ -3,22 +3,26 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DataNetwork from "@/components/DataNetwork";
-import { 
-  User, 
-  Calendar, 
-  Fingerprint, 
-  Briefcase, 
-  Building, 
-  Mail, 
-  Phone, 
+import {
+  User,
+  Calendar,
+  Fingerprint,
+  Briefcase,
+  Building,
+  Mail,
+  Phone,
   Award,
   CheckCircle,
   AlertCircle,
   MapPin,
   Clock,
   Lock,
-  Navigation
+  Navigation,
+  MessageSquare,
+  Send,
+  X
 } from "lucide-react";
+import { CONTACT_SUBJECTS, DEFAULT_CONTACT_SUBJECT } from "@/lib/contactSubjects";
 
 // T.C. Kimlik No Validation Algorithm
 function validateTCNo(tc: string): boolean {
@@ -168,6 +172,58 @@ export default function RegisterForm() {
     }
   };
 
+  // ---- İletişim (contact) modal ----
+  const [contactOpen, setContactOpen] = useState(false);
+  const [contactData, setContactData] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    subject: DEFAULT_CONTACT_SUBJECT as string,
+    message: "",
+  });
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(false);
+  const [contactError, setContactError] = useState("");
+
+  const closeContact = () => {
+    setContactOpen(false);
+    // Reset to a clean slate so reopening doesn't show a stale success/error state.
+    setContactSuccess(false);
+    setContactError("");
+    setContactData({ first_name: "", last_name: "", phone: "", subject: DEFAULT_CONTACT_SUBJECT, message: "" });
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactError("");
+
+    if (
+      !contactData.first_name.trim() ||
+      !contactData.last_name.trim() ||
+      !contactData.phone.trim() ||
+      !contactData.message.trim()
+    ) {
+      setContactError("Lütfen isim, soyisim, telefon ve mesaj alanlarını doldurun.");
+      return;
+    }
+
+    setContactLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Mesaj gönderilemedi.");
+      setContactSuccess(true);
+    } catch (err: any) {
+      setContactError(err.message || "Mesaj gönderilemedi. Lütfen tekrar deneyin.");
+    } finally {
+      setContactLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#051c19] via-[#020b0a] to-[#061917] text-zinc-100 flex flex-col items-center justify-between font-sans antialiased relative overflow-x-hidden transition-all duration-700">
       
@@ -240,14 +296,16 @@ export default function RegisterForm() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-700">
         
         <div className="absolute inset-0 transition-all duration-700">
-          <div className="absolute inset-0 tech-grid" />
+          {/* Main background scene — disaster + big-data themed full-bleed image */}
+          <div className="absolute inset-0">
+            <Image src="/afet-bg.png" alt="Afet ve Büyük Veri Yönetimi Arka Planı" fill className="object-cover object-center" priority />
+            {/* Dark scrims keep overlaid hero text and form legible over the busy scene */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#020b0a]/70 via-[#020b0a]/40 to-[#020b0a]/85" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#020b0a]/65 via-transparent to-[#020b0a]/35" />
+          </div>
+          <div className="absolute inset-0 tech-grid opacity-60" />
           <DataNetwork />
           <div className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#8BE92C]/40 to-transparent shadow-[0_0_15px_rgba(139,233,44,0.6)] animate-scan" />
-          
-          {/* Blended Poster Image Sub-layer (more visible & color blended) */}
-          <div className="absolute inset-0 opacity-[0.24] mix-blend-screen scale-105 filter saturate-75">
-            <Image src="/poster.jpg" alt="Afiş Arka Plan" fill className="object-cover object-top" priority />
-          </div>
 
           {/* Radar / HUD SVG Circles */}
           <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-[0.22] hidden lg:block">
@@ -319,13 +377,19 @@ export default function RegisterForm() {
           </div>
         </div>
 
-        <div className="flex gap-4 text-[10px] md:text-[11px] text-zinc-400">
-          <a href="mailto:bilgi@afet.org.tr" className="hover:text-[#8BE92C] transition-colors flex items-center gap-1.5">
+        <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-[11px] text-zinc-400">
+          <a href="mailto:bilgi@afet.org.tr" className="hidden sm:flex hover:text-[#8BE92C] transition-colors items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> bilgi@afet.org.tr
           </a>
-          <a href="https://www.afet.org.tr" target="_blank" rel="noreferrer" className="hover:text-[#8BE92C] transition-colors flex items-center gap-1.5">
+          <a href="https://www.afet.org.tr" target="_blank" rel="noreferrer" className="hidden sm:flex hover:text-[#8BE92C] transition-colors items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> afet.org.tr
           </a>
+          <button
+            onClick={() => setContactOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-[#8BE92C] border border-emerald-800/40 rounded-xl text-[10px] md:text-[11px] font-bold transition-all"
+          >
+            <MessageSquare size={13} /> İletişim
+          </button>
         </div>
       </header>
 
@@ -636,6 +700,147 @@ export default function RegisterForm() {
           © 2026 Afet Araştırmaları Derneği. Tüm hakları saklıdır.
         </div>
       </footer>
+
+      {/* İletişim (Contact) Modal */}
+      {contactOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          onClick={closeContact}
+        >
+          <div
+            className="w-full max-w-md bg-[#071513] border border-emerald-950/50 rounded-3xl shadow-2xl relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-emerald-950/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-950/40 border border-[#8BE92C]/20 flex items-center justify-center text-[#8BE92C]">
+                  <MessageSquare size={16} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-zinc-100">Bize Ulaşın</h3>
+                  <p className="text-[10px] text-zinc-400">Sorularınız için mesaj bırakın</p>
+                </div>
+              </div>
+              <button
+                onClick={closeContact}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/60 transition-all"
+                aria-label="Kapat"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {contactSuccess ? (
+              <div className="p-8 text-center space-y-3">
+                <div className="w-14 h-14 bg-emerald-950/40 border border-[#8BE92C]/30 rounded-full flex items-center justify-center mx-auto text-[#8BE92C]">
+                  <CheckCircle size={28} />
+                </div>
+                <h4 className="text-base font-bold text-zinc-100">Mesajınız Alındı</h4>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  En kısa sürede sizinle iletişime geçeceğiz. Teşekkür ederiz.
+                </p>
+                <button
+                  onClick={closeContact}
+                  className="mt-2 px-6 py-2 bg-emerald-950/40 hover:bg-emerald-950/60 text-[#8BE92C] border border-[#8BE92C]/20 rounded-xl text-xs font-bold transition-all"
+                >
+                  Kapat
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleContactSubmit} className="p-5 space-y-3">
+                {contactError && (
+                  <div className="p-2.5 bg-red-950/20 border border-red-500/20 rounded-xl text-red-400 text-xs flex items-center gap-2">
+                    <AlertCircle size={14} /> {contactError}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="relative">
+                    <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
+                    <input
+                      type="text"
+                      value={contactData.first_name}
+                      onChange={(e) => setContactData((p) => ({ ...p, first_name: e.target.value }))}
+                      placeholder="İsim"
+                      className="w-full bg-zinc-950/80 border border-zinc-800/70 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2 pl-9 pr-3 text-[13px] outline-none transition-all"
+                    />
+                  </div>
+                  <div className="relative">
+                    <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
+                    <input
+                      type="text"
+                      value={contactData.last_name}
+                      onChange={(e) => setContactData((p) => ({ ...p, last_name: e.target.value }))}
+                      placeholder="Soyisim"
+                      className="w-full bg-zinc-950/80 border border-zinc-800/70 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2 pl-9 pr-3 text-[13px] outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
+                  <input
+                    type="tel"
+                    value={contactData.phone}
+                    onChange={(e) =>
+                      setContactData((p) => ({ ...p, phone: e.target.value.replace(/[^\d+\s]/g, "") }))
+                    }
+                    placeholder="Telefon"
+                    className="w-full bg-zinc-950/80 border border-zinc-800/70 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2 pl-9 pr-3 text-[13px] outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-1.5">
+                    Konu
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CONTACT_SUBJECTS.map((subject) => (
+                      <button
+                        type="button"
+                        key={subject}
+                        onClick={() => setContactData((p) => ({ ...p, subject }))}
+                        className={`px-3 py-2 rounded-xl text-[11px] font-bold border transition-all text-left ${
+                          contactData.subject === subject
+                            ? "bg-emerald-950/50 border-[#8BE92C]/40 text-[#8BE92C]"
+                            : "bg-zinc-950/60 border-zinc-800/70 text-zinc-400 hover:border-zinc-700"
+                        }`}
+                      >
+                        {subject}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <textarea
+                  value={contactData.message}
+                  onChange={(e) => setContactData((p) => ({ ...p, message: e.target.value }))}
+                  placeholder="Mesajınız..."
+                  rows={4}
+                  className="w-full bg-zinc-950/80 border border-zinc-800/70 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2.5 px-3 text-[13px] outline-none transition-all resize-none"
+                />
+
+                <button
+                  type="submit"
+                  disabled={contactLoading}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-zinc-950 font-black py-2.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/10 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {contactLoading ? (
+                    <div className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Send size={14} /> Gönder
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
