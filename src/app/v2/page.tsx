@@ -417,6 +417,17 @@ export default function RegisterFormV2() {
             </div>
           </div>
 
+          {/* Support statement — bottom of the left column (original position) */}
+          <div className="text-[10px] lg:text-[11px] text-slate-400 font-medium flex items-center gap-2.5 mt-auto">
+            <img
+              src="/sivil_toplum_logo3_beyaz.png"
+              alt="T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü"
+              className="h-[30px] md:h-9 w-auto object-contain shrink-0"
+            />
+            <span>
+              Bu proje, T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü tarafından desteklenmektedir.
+            </span>
+          </div>
         </div>
 
         {/* Right: Registration form */}
@@ -680,18 +691,7 @@ export default function RegisterFormV2() {
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-2.5 px-6 text-slate-400">
-          <img
-            src="/sivil_toplum_logo3_beyaz.png"
-            alt="T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü"
-            className="h-7 md:h-8 w-auto object-contain shrink-0"
-          />
-          <span className="text-[10px] md:text-[11px] font-medium">
-            Bu proje, T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü tarafından desteklenmektedir.
-          </span>
-        </div>
-
-        <div className="border-t border-sky-900/10 pt-2 text-slate-600">
+        <div className="border-t border-sky-900/10 pt-2.5 text-slate-600">
           © 2026 Afet Araştırmaları Derneği. Tüm hakları saklıdır.
         </div>
       </footer>
