@@ -21,7 +21,6 @@ import {
   Send,
   X,
   FileText,
-  Image as ImageIcon,
   ArrowUpRight,
 } from "lucide-react";
 import { CONTACT_SUBJECTS, DEFAULT_CONTACT_SUBJECT } from "@/lib/contactSubjects";
@@ -240,7 +239,6 @@ export default function RegisterFormV2() {
   const announcements = [
     { label: "Bilgilendirme ve Davet Metni", href: "/duyuru-metni.pdf", icon: FileText },
     { label: "Bilgi Notu (30 Haziran 2026)", href: "/bilgi-notu.pdf", icon: FileText },
-    { label: "Sempozyum Afişi", href: "/afis.jpg", icon: ImageIcon },
   ];
 
   return (
