@@ -22,37 +22,38 @@ interface BadgeSponsor {
   logo_url: string;
 }
 
-// A single 90×130 mm portrait lanyard card. The supplied yaka.png template (exact
-// 90:130 ratio — AAD identity, disaster hero and the content panel) is the full-card
-// background; content is overlaid by percentage so it lands on the template's zones.
-// The same markup is used for both on-screen preview and print.
+// A single 90×130 mm portrait lanyard card — clean navy + gold design matching the
+// site: a built (not photographed) header with the AAD lockup and event title, a white
+// participant frame, a color-coded role band, and a sponsor/AAD footer strip. The same
+// markup is used for both on-screen preview and print.
 function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null }) {
   const secondary = [r.profession, r.position].filter(Boolean).join(" · ");
   const band = roleColor(r.role);
 
   return (
-    <div className="badge-card relative overflow-hidden rounded-xl shadow-2xl print:shadow-none print:rounded-none bg-[#0a1426]">
-      {/* Template background (carries the AAD identity chip + disaster hero on a clean
-          dark-green field) — exact 90:130 ratio, so percentage overlays land precisely */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/yakakart.png" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
-
-      {/* Event title — straddles the hero base and the dark-green field below it */}
-      <div
-        className="absolute left-0 right-0 top-[24.5%] px-3 text-center"
-        style={{ textShadow: "0 1px 8px rgba(0,0,0,0.65)" }}
-      >
-        <span className="block text-[11px] font-black uppercase tracking-[0.26em] text-zinc-100">AFETLERDE</span>
-        <span className="block text-[25px] font-black uppercase leading-[1.0] text-[#e7c878]">BÜYÜK VERİ YÖNETİMİ</span>
-        <span className="block text-[11px] font-black uppercase tracking-[0.36em] text-zinc-100">SEMPOZYUMU</span>
-        <span className="block mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#e7c878]/90">
+    <div className="badge-card relative overflow-hidden rounded-xl shadow-2xl print:shadow-none print:rounded-none flex flex-col bg-gradient-to-b from-[#0b1a33] via-[#071228] to-[#04060f]">
+      {/* Header — AAD lockup + event title lockup */}
+      <div className="relative px-4 pt-[7mm] pb-[4mm] text-center">
+        {/* Top gold hairline accent */}
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-yeni.png"
+          alt="Afet Araştırmaları Derneği"
+          className="h-[8mm] w-auto object-contain mx-auto mb-[4mm]"
+        />
+        <span className="block text-[11px] font-black uppercase tracking-[0.3em] text-white">AFETLERDE</span>
+        <span className="block text-[24px] font-black uppercase leading-[1.0] text-white">BÜYÜK VERİ YÖNETİMİ</span>
+        <div className="relative mx-auto my-[2mm] h-[1.5px] w-[78%] bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
+        <span className="block text-[12px] font-bold uppercase tracking-[0.42em] text-[#e7c878]">SEMPOZYUMU</span>
+        <span className="block mt-[1.5mm] text-[8.5px] font-bold uppercase tracking-[0.18em] text-[#e7c878]/85">
           15 – 16 Ağustos 2026 · Ankara
         </span>
       </div>
 
-      {/* Participant — name inside a separate white frame over the content panel */}
-      <div className="absolute left-[7%] right-[7%] top-[45%] bottom-[19%] bg-white rounded-2xl ring-1 ring-black/5 shadow-lg flex flex-col items-center justify-center text-center px-4 gap-2">
-        <h1 className="text-[27px] leading-[1.03] font-black uppercase tracking-tight text-[#041e1b] break-words">
+      {/* Participant — name inside a white frame */}
+      <div className="relative flex-1 mx-[7%] mb-[3mm] bg-white rounded-2xl ring-1 ring-black/5 shadow-lg flex flex-col items-center justify-center text-center px-4 gap-2">
+        <h1 className="text-[27px] leading-[1.03] font-black uppercase tracking-tight text-[#0a1426] break-words">
           {r.name_surname}
         </h1>
         {r.company && (
@@ -65,29 +66,32 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
 
       {/* Role band — full-bleed, color-coded, the distance-read element */}
       <div
-        className="absolute left-0 right-0 bottom-[10%] h-[7.5%] flex items-center justify-center px-2 text-center text-white font-black uppercase text-[13px] tracking-[0.12em] leading-tight"
+        className="relative h-[10mm] flex items-center justify-center px-2 text-center text-white font-black uppercase text-[13px] tracking-[0.12em] leading-tight"
         style={{ backgroundColor: band }}
       >
         {r.role || "Katılımcı"}
       </div>
 
-      {/* Footer — white strip: main sponsor bottom-left, crow bottom-right */}
-      <div className="absolute left-0 right-0 bottom-0 h-[10%] bg-white" />
-      {sponsor && (
-        <div className="absolute bottom-[1.6%] left-[4.5%] flex flex-col items-start gap-0.5 max-w-[58%]">
-          <span className="text-[6px] font-bold uppercase tracking-[0.14em] text-zinc-400 leading-none">
-            Ana Sponsor
-          </span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={sponsor.logo_url} alt={sponsor.name} title={sponsor.name} className="h-[7mm] max-w-[42mm] w-auto object-contain" />
-        </div>
-      )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/karga.png"
-        alt="Afet Araştırmaları Derneği"
-        className="absolute bottom-[1.4%] right-[4%] h-[8.4%] w-auto object-contain"
-      />
+      {/* Footer — white strip: main sponsor left, AAD crow right */}
+      <div className="relative h-[13mm] bg-white flex items-center justify-between px-[5mm]">
+        {sponsor ? (
+          <div className="flex flex-col items-start gap-0.5 max-w-[58%]">
+            <span className="text-[6px] font-bold uppercase tracking-[0.14em] text-zinc-400 leading-none">
+              Ana Sponsor
+            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={sponsor.logo_url} alt={sponsor.name} title={sponsor.name} className="h-[7mm] max-w-[42mm] w-auto object-contain" />
+          </div>
+        ) : (
+          <span />
+        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/karga.png"
+          alt="Afet Araştırmaları Derneği"
+          className="h-[10mm] w-auto object-contain"
+        />
+      </div>
     </div>
   );
 }
