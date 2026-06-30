@@ -264,12 +264,12 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#030908] text-zinc-100 flex items-center justify-center font-sans antialiased relative overflow-hidden px-6">
-        <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-emerald-950/15 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="min-h-screen bg-[#040a16] text-zinc-100 flex items-center justify-center font-sans antialiased relative overflow-hidden px-6">
+        <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-sky-950/15 rounded-full blur-[100px] pointer-events-none -z-10" />
         
-        <div className="w-full max-w-md p-8 bg-zinc-900/30 backdrop-blur-xl border border-emerald-950/40 rounded-3xl shadow-2xl space-y-6">
+        <div className="w-full max-w-md p-8 bg-zinc-900/30 backdrop-blur-xl border border-sky-950/40 rounded-3xl shadow-2xl space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 bg-emerald-950/40 border border-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto text-[#8BE92C]">
+            <div className="w-12 h-12 bg-sky-950/40 border border-[#e7c878]/20 rounded-2xl flex items-center justify-center mx-auto text-[#e7c878]">
               <Lock size={22} />
             </div>
             <h1 className="text-xl font-black">Yönetim Paneli Girişi</h1>
@@ -289,7 +289,7 @@ export default function AdminDashboard() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2.5 px-4 text-sm outline-none transition-all text-center tracking-widest text-[#8BE92C] font-mono"
+                className="w-full bg-zinc-950 border border-zinc-800 focus:border-[#e7c878] focus:ring-1 focus:ring-[#e7c878]/20 rounded-xl py-2.5 px-4 text-sm outline-none transition-all text-center tracking-widest text-[#e7c878] font-mono"
                 placeholder="••••••••"
                 required
               />
@@ -298,7 +298,7 @@ export default function AdminDashboard() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-zinc-950 font-extrabold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-zinc-950 font-extrabold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
@@ -315,9 +315,9 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030908] text-zinc-100 flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[#040a16] text-zinc-100 flex flex-col font-sans antialiased">
       {/* Admin Header */}
-      <header className="w-full border-b border-emerald-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
+      <header className="w-full border-b border-sky-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 md:h-12 flex items-center justify-center">
@@ -327,26 +327,26 @@ export default function AdminDashboard() {
                 className="h-full w-auto object-contain"
               />
             </div>
-            <div className="border-l border-emerald-950/20 pl-3 h-8 flex flex-col justify-center">
-              <h1 className="text-xs font-black text-[#8BE92C] uppercase tracking-wider">Afet Araştırmaları Derneği</h1>
+            <div className="border-l border-sky-950/20 pl-3 h-8 flex flex-col justify-center">
+              <h1 className="text-xs font-black text-[#e7c878] uppercase tracking-wider">Afet Araştırmaları Derneği</h1>
               <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">Kayıt Yönetim Paneli</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/admin/contact")}
-              className="relative flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-400 rounded-xl border border-emerald-800/40 text-xs font-bold transition-all"
+              className="relative flex items-center gap-1.5 px-3 py-1.5 bg-sky-950/40 hover:bg-sky-950/70 text-[#e7c878] rounded-xl border border-sky-800/40 text-xs font-bold transition-all"
             >
               <MessageSquare size={14} /> İletişim Mesajları
               {contactUnread > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-[#8BE92C] text-zinc-950 text-[10px] font-black rounded-full">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-[#e7c878] text-zinc-950 text-[10px] font-black rounded-full">
                   {contactUnread}
                 </span>
               )}
             </button>
             <button
               onClick={() => router.push("/admin/sponsors")}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-400 rounded-xl border border-emerald-800/40 text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-950/40 hover:bg-sky-950/70 text-[#e7c878] rounded-xl border border-sky-800/40 text-xs font-bold transition-all"
             >
               <Building2 size={14} /> Destekleyenleri Yönet
             </button>
@@ -367,12 +367,12 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Stat 1 */}
           <div className="p-6 bg-zinc-900/20 backdrop-blur border border-zinc-800/40 rounded-2xl flex items-center gap-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-emerald-950/30 border border-emerald-500/10 flex items-center justify-center text-[#8BE92C]">
+            <div className="w-12 h-12 rounded-xl bg-sky-950/30 border border-[#e7c878]/10 flex items-center justify-center text-[#e7c878]">
               <Users size={24} />
             </div>
             <div>
               <h3 className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Toplam Kayıtlı</h3>
-              <p className="text-2xl font-black mt-1 text-[#8BE92C]">{totalRegistrations}</p>
+              <p className="text-2xl font-black mt-1 text-[#e7c878]">{totalRegistrations}</p>
             </div>
             <div className="absolute right-0 bottom-0 translate-x-2 translate-y-2 opacity-5 pointer-events-none">
               <Users size={96} />
@@ -381,7 +381,7 @@ export default function AdminDashboard() {
 
           {/* Stat 2 */}
           <div className="p-6 bg-zinc-900/20 backdrop-blur border border-zinc-800/40 rounded-2xl flex items-center gap-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-emerald-950/30 border border-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <div className="w-12 h-12 rounded-xl bg-sky-950/30 border border-[#e7c878]/10 flex items-center justify-center text-[#e7c878]">
               <Building size={24} />
             </div>
             <div>
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
 
           {/* Stat 3 */}
           <div className="p-6 bg-zinc-900/20 backdrop-blur border border-zinc-800/40 rounded-2xl flex items-center gap-4 relative overflow-hidden">
-            <div className="w-12 h-12 rounded-xl bg-emerald-950/30 border border-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <div className="w-12 h-12 rounded-xl bg-sky-950/30 border border-[#e7c878]/10 flex items-center justify-center text-[#e7c878]">
               <Briefcase size={24} />
             </div>
             <div>
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
               placeholder="İsim, e-posta, kurum, meslek veya TC..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2 pl-10 pr-4 text-xs outline-none transition-all"
+              className="w-full bg-zinc-950 border border-zinc-800 focus:border-[#e7c878] focus:ring-1 focus:ring-[#e7c878]/20 rounded-xl py-2 pl-10 pr-4 text-xs outline-none transition-all"
             />
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
           </div>
@@ -434,14 +434,14 @@ export default function AdminDashboard() {
             </button>
             <button
               onClick={handlePrintSelected}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-950/60 hover:bg-emerald-950 text-emerald-400 border border-emerald-800/40 rounded-xl text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 bg-sky-950/60 hover:bg-sky-950 text-[#e7c878] border border-sky-800/40 rounded-xl text-xs font-bold transition-all"
             >
               <Printer size={14} /> Seçilen Kartları Yazdır
             </button>
             <button
               onClick={handlePrintAll}
               disabled={filteredRegistrants.length === 0}
-              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-zinc-950 rounded-xl text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-zinc-950 rounded-xl text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Printer size={14} /> Tüm Kartları Yazdır
             </button>
@@ -459,7 +459,7 @@ export default function AdminDashboard() {
                       type="checkbox"
                       onChange={toggleSelectAll}
                       checked={filteredRegistrants.length > 0 && filteredRegistrants.every((r) => selectedIds[r.id])}
-                      className="rounded border-zinc-800 bg-zinc-950 text-emerald-500 focus:ring-emerald-500/20"
+                      className="rounded border-zinc-800 bg-zinc-950 text-[#e7c878] focus:ring-[#e7c878]/20"
                     />
                   </th>
                   <th className="py-4 px-3 font-bold uppercase tracking-wider text-center w-12">No</th>
@@ -471,9 +471,9 @@ export default function AdminDashboard() {
                     >
                       Katılımcı Bilgileri
                       {nameSort === "asc" ? (
-                        <ChevronUp size={12} className="text-[#8BE92C]" />
+                        <ChevronUp size={12} className="text-[#e7c878]" />
                       ) : nameSort === "desc" ? (
-                        <ChevronDown size={12} className="text-[#8BE92C]" />
+                        <ChevronDown size={12} className="text-[#e7c878]" />
                       ) : (
                         <ChevronsUpDown size={12} className="opacity-40" />
                       )}
@@ -498,14 +498,14 @@ export default function AdminDashboard() {
                   filteredRegistrants.map((r, index) => (
                     <tr
                       key={r.id}
-                      className={`hover:bg-zinc-900/20 transition-colors ${selectedIds[r.id] ? "bg-emerald-950/5" : ""}`}
+                      className={`hover:bg-zinc-900/20 transition-colors ${selectedIds[r.id] ? "bg-sky-950/5" : ""}`}
                     >
                       <td className="py-4 px-6 text-center">
                         <input
                           type="checkbox"
                           checked={!!selectedIds[r.id]}
                           onChange={() => toggleSelect(r.id)}
-                          className="rounded border-zinc-800 bg-zinc-950 text-emerald-500 focus:ring-emerald-500/20"
+                          className="rounded border-zinc-800 bg-zinc-950 text-[#e7c878] focus:ring-[#e7c878]/20"
                         />
                       </td>
                       <td className="py-4 px-3 text-center text-zinc-500 font-mono text-xs">
@@ -545,7 +545,7 @@ export default function AdminDashboard() {
                         <select
                           value={r.role || "Katılımcı"}
                           onChange={(e) => handleRoleChange(r.id, e.target.value)}
-                          className="bg-zinc-950 border border-zinc-800 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-lg py-1.5 px-2 text-xs text-zinc-200 outline-none cursor-pointer transition-all"
+                          className="bg-zinc-950 border border-zinc-800 focus:border-[#e7c878] focus:ring-1 focus:ring-[#e7c878]/20 rounded-lg py-1.5 px-2 text-xs text-zinc-200 outline-none cursor-pointer transition-all"
                         >
                           {PARTICIPANT_ROLES.map((role) => (
                             <option key={role} value={role} className="bg-zinc-950">

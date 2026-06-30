@@ -31,7 +31,7 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
   const band = roleColor(r.role);
 
   return (
-    <div className="badge-card relative overflow-hidden rounded-xl shadow-2xl print:shadow-none print:rounded-none bg-[#2f3f37]">
+    <div className="badge-card relative overflow-hidden rounded-xl shadow-2xl print:shadow-none print:rounded-none bg-[#0a1426]">
       {/* Template background (carries the AAD identity chip + disaster hero on a clean
           dark-green field) — exact 90:130 ratio, so percentage overlays land precisely */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -43,9 +43,9 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
         style={{ textShadow: "0 1px 8px rgba(0,0,0,0.65)" }}
       >
         <span className="block text-[11px] font-black uppercase tracking-[0.26em] text-zinc-100">AFETLERDE</span>
-        <span className="block text-[25px] font-black uppercase leading-[1.0] text-[#8BE92C]">BÜYÜK VERİ YÖNETİMİ</span>
+        <span className="block text-[25px] font-black uppercase leading-[1.0] text-[#e7c878]">BÜYÜK VERİ YÖNETİMİ</span>
         <span className="block text-[11px] font-black uppercase tracking-[0.36em] text-zinc-100">SEMPOZYUMU</span>
-        <span className="block mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#8BE92C]/90">
+        <span className="block mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#e7c878]/90">
           15 – 16 Ağustos 2026 · Ankara
         </span>
       </div>
@@ -163,8 +163,8 @@ export default function PrintBadges() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#030908] text-zinc-100 flex flex-col items-center justify-center gap-3">
-        <Loader2 className="animate-spin text-[#8BE92C]" size={36} />
+      <div className="min-h-screen bg-[#040a16] text-zinc-100 flex flex-col items-center justify-center gap-3">
+        <Loader2 className="animate-spin text-[#e7c878]" size={36} />
         <p className="text-xs text-zinc-400 font-medium">Baskı şablonu hazırlanıyor, lütfen bekleyin...</p>
       </div>
     );
@@ -172,7 +172,7 @@ export default function PrintBadges() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#030908] text-zinc-100 flex flex-col items-center justify-center p-6 text-center space-y-4">
+      <div className="min-h-screen bg-[#040a16] text-zinc-100 flex flex-col items-center justify-center p-6 text-center space-y-4">
         <AlertCircle className="text-red-400" size={48} />
         <p className="text-sm font-semibold max-w-md">{error}</p>
         <button
@@ -221,7 +221,7 @@ export default function PrintBadges() {
       `}} />
 
       {/* Control bar (hidden on print) */}
-      <div className="no-print bg-[#030908] text-zinc-100 border-b border-emerald-950/40 p-4 sticky top-0 z-50 flex items-center justify-between px-6 shadow-md">
+      <div className="no-print bg-[#040a16] text-zinc-100 border-b border-sky-950/40 p-4 sticky top-0 z-50 flex items-center justify-between px-6 shadow-md">
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.close()}
@@ -239,7 +239,7 @@ export default function PrintBadges() {
         </div>
         <button
           onClick={triggerPrint}
-          className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-zinc-950 rounded-xl text-xs font-extrabold transition-all shadow-lg shadow-emerald-500/10"
+          className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-zinc-950 rounded-xl text-xs font-extrabold transition-all shadow-lg shadow-[#e7c878]/10"
         >
           <Printer size={16} /> Yazdır (Ctrl + P)
         </button>

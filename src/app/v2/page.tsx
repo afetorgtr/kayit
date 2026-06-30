@@ -389,10 +389,7 @@ export default function RegisterFormV2() {
           </div>
 
           {/* Duyurular */}
-          <div className="p-4 bg-[#0a1426]/55 backdrop-blur-md rounded-2xl border border-sky-900/25">
-            <h3 className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-[#e7c878] uppercase font-bold mb-1">
-              <span className="w-3.5 h-px bg-[#c9a24b]" /> Duyurular
-            </h3>
+          <div className="px-4 py-1.5 bg-[#0a1426]/55 backdrop-blur-md rounded-2xl border border-sky-900/25">
             <div className="divide-y divide-sky-900/15">
               {announcements.map((a) => {
                 const Icon = a.icon;
@@ -420,23 +417,11 @@ export default function RegisterFormV2() {
             </div>
           </div>
 
-          {/* Support statement */}
-          <div className="text-[9px] md:text-[10px] lg:text-[11px] text-slate-400 font-medium flex items-center gap-2.5 mt-auto">
-            <img
-              src="/sivil_toplum_logo3_beyaz.png"
-              alt="T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü"
-              className="h-[30px] md:h-9 w-auto object-contain shrink-0"
-            />
-            <span>
-              T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü{" "}
-              <br className="hidden lg:inline" /> ve AFAD tarafından desteklenmektedir.
-            </span>
-          </div>
         </div>
 
         {/* Right: Registration form */}
         <div className="lg:flex-[1] min-w-0 flex flex-col">
-          <div className="flex-1 p-3.5 md:p-4 lg:p-5 bg-[#0a1426]/70 backdrop-blur-2xl border border-sky-900/30 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
+          <div className="flex-1 p-3.5 md:p-4 lg:p-4 bg-[#0a1426]/70 backdrop-blur-2xl border border-sky-900/30 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col justify-between">
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#c9a24b]" />
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#5bc0e8]/5 rounded-full blur-2xl pointer-events-none" />
 
@@ -462,8 +447,8 @@ export default function RegisterFormV2() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-3 lg:space-y-4">
+              <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-3">
+                <div className="space-y-2.5 lg:space-y-3">
                   <div>
                     <h2 className="text-base lg:text-lg font-bold flex items-center gap-2">
                       Katılım Kayıt Formu
@@ -480,7 +465,7 @@ export default function RegisterFormV2() {
                     </div>
                   )}
 
-                  <div className="space-y-2.5 lg:space-y-3.5">
+                  <div className="space-y-2 lg:space-y-2.5">
                     <div>
                       <label className={labelCls}>
                         Adınız, Soyadınız <span className="text-[#e7c878]">*</span>
@@ -695,7 +680,18 @@ export default function RegisterFormV2() {
           </div>
         )}
 
-        <div className="border-t border-sky-900/10 pt-2.5 text-slate-600">
+        <div className="flex items-center justify-center gap-2.5 px-6 text-slate-400">
+          <img
+            src="/sivil_toplum_logo3_beyaz.png"
+            alt="T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü"
+            className="h-7 md:h-8 w-auto object-contain shrink-0"
+          />
+          <span className="text-[10px] md:text-[11px] font-medium">
+            Bu proje, T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü tarafından desteklenmektedir.
+          </span>
+        </div>
+
+        <div className="border-t border-sky-900/10 pt-2 text-slate-600">
           © 2026 Afet Araştırmaları Derneği. Tüm hakları saklıdır.
         </div>
       </footer>

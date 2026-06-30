@@ -112,14 +112,14 @@ export default function ContactMessagesAdmin() {
   const unreadCount = messages.filter((m) => !m.is_read).length;
 
   return (
-    <div className="min-h-screen bg-[#030908] text-zinc-100 flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[#040a16] text-zinc-100 flex flex-col font-sans antialiased">
       {/* Header */}
-      <header className="w-full border-b border-emerald-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
+      <header className="w-full border-b border-sky-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <MessageSquare className="text-[#8BE92C]" size={20} />
+            <MessageSquare className="text-[#e7c878]" size={20} />
             <div>
-              <h1 className="text-xs font-black text-[#8BE92C] uppercase tracking-wider">
+              <h1 className="text-xs font-black text-[#e7c878] uppercase tracking-wider">
                 İletişim Mesajları
               </h1>
               <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">
@@ -148,7 +148,7 @@ export default function ContactMessagesAdmin() {
           <div className="flex items-center gap-2 text-xs text-zinc-400">
             <span className="font-bold text-zinc-200">{messages.length}</span> mesaj
             {unreadCount > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-[#8BE92C]/15 text-[#8BE92C] font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-[#e7c878]/15 text-[#e7c878] font-bold">
                 {unreadCount} okunmamış
               </span>
             )}
@@ -157,7 +157,7 @@ export default function ContactMessagesAdmin() {
             <button
               onClick={() => setFilter("all")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                filter === "all" ? "bg-emerald-950/60 text-emerald-300" : "text-zinc-500 hover:text-zinc-300"
+                filter === "all" ? "bg-sky-950/60 text-[#e7c878]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               Tümü
@@ -165,7 +165,7 @@ export default function ContactMessagesAdmin() {
             <button
               onClick={() => setFilter("unread")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                filter === "unread" ? "bg-emerald-950/60 text-emerald-300" : "text-zinc-500 hover:text-zinc-300"
+                filter === "unread" ? "bg-sky-950/60 text-[#e7c878]" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               Okunmamış
@@ -176,7 +176,7 @@ export default function ContactMessagesAdmin() {
         {/* List */}
         {loading ? (
           <div className="flex flex-col items-center justify-center gap-3 py-20">
-            <Loader2 className="animate-spin text-[#8BE92C]" size={32} />
+            <Loader2 className="animate-spin text-[#e7c878]" size={32} />
             <p className="text-xs text-zinc-400">Mesajlar yükleniyor...</p>
           </div>
         ) : visible.length === 0 ? (
@@ -194,24 +194,24 @@ export default function ContactMessagesAdmin() {
                 className={`p-4 rounded-2xl border transition-all ${
                   m.is_read
                     ? "bg-zinc-900/20 border-zinc-800/40"
-                    : "bg-emerald-950/10 border-emerald-800/30"
+                    : "bg-sky-950/10 border-sky-800/30"
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      {!m.is_read && <span className="w-2 h-2 rounded-full bg-[#8BE92C] shrink-0" />}
+                      {!m.is_read && <span className="w-2 h-2 rounded-full bg-[#e7c878] shrink-0" />}
                       <span className="font-bold text-zinc-100 text-sm">
                         {m.first_name} {m.last_name}
                       </span>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800/60 border border-zinc-700/50 text-[10px] font-bold text-emerald-300">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800/60 border border-zinc-700/50 text-[10px] font-bold text-[#e7c878]">
                         <Tag size={10} /> {m.subject}
                       </span>
                     </div>
                     <div className="flex items-center gap-4 mt-1.5 text-[11px] text-zinc-400">
                       <a
                         href={`tel:${m.phone}`}
-                        className="flex items-center gap-1 hover:text-[#8BE92C] transition-colors"
+                        className="flex items-center gap-1 hover:text-[#e7c878] transition-colors"
                       >
                         <Phone size={11} className="text-zinc-600" /> {m.phone}
                       </a>
@@ -229,9 +229,9 @@ export default function ContactMessagesAdmin() {
                       onClick={() => toggleRead(m.id, !m.is_read)}
                       disabled={busyId === m.id}
                       title={m.is_read ? "Okunmadı olarak işaretle" : "Okundu olarak işaretle"}
-                      className="inline-flex items-center justify-center w-9 h-9 bg-zinc-900/60 hover:bg-emerald-950/40 hover:text-emerald-300 rounded-xl border border-zinc-800 text-zinc-400 transition-all disabled:opacity-50"
+                      className="inline-flex items-center justify-center w-9 h-9 bg-zinc-900/60 hover:bg-sky-950/40 hover:text-[#e7c878] rounded-xl border border-zinc-800 text-zinc-400 transition-all disabled:opacity-50"
                     >
-                      {m.is_read ? <CheckCircle2 size={15} className="text-emerald-400" /> : <Circle size={15} />}
+                      {m.is_read ? <CheckCircle2 size={15} className="text-[#e7c878]" /> : <Circle size={15} />}
                     </button>
                     <button
                       onClick={() => handleDelete(m.id, `${m.first_name} ${m.last_name}`)}

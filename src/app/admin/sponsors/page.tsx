@@ -183,14 +183,14 @@ export default function SponsorsAdmin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030908] text-zinc-100 flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[#040a16] text-zinc-100 flex flex-col font-sans antialiased">
       {/* Header */}
-      <header className="w-full border-b border-emerald-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
+      <header className="w-full border-b border-sky-950/30 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Building2 className="text-[#8BE92C]" size={20} />
+            <Building2 className="text-[#e7c878]" size={20} />
             <div>
-              <h1 className="text-xs font-black text-[#8BE92C] uppercase tracking-wider">
+              <h1 className="text-xs font-black text-[#e7c878] uppercase tracking-wider">
                 Destekleyen Kurumlar
               </h1>
               <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">
@@ -220,7 +220,7 @@ export default function SponsorsAdmin() {
           className="p-5 bg-zinc-900/20 border border-zinc-800/40 rounded-2xl space-y-4"
         >
           <h2 className="text-sm font-bold flex items-center gap-2">
-            <Plus size={16} className="text-[#8BE92C]" /> Yeni Destekleyen Ekle
+            <Plus size={16} className="text-[#e7c878]" /> Yeni Destekleyen Ekle
           </h2>
           <div className="flex flex-col md:flex-row gap-3">
             <input
@@ -228,9 +228,9 @@ export default function SponsorsAdmin() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Firma / Kurum adı"
-              className="flex-1 bg-zinc-950 border border-zinc-800 focus:border-[#8BE92C] focus:ring-1 focus:ring-[#8BE92C]/20 rounded-xl py-2 px-4 text-sm outline-none transition-all"
+              className="flex-1 bg-zinc-950 border border-zinc-800 focus:border-[#e7c878] focus:ring-1 focus:ring-[#e7c878]/20 rounded-xl py-2 px-4 text-sm outline-none transition-all"
             />
-            <label className="flex items-center gap-2 px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-400 font-bold cursor-pointer hover:border-emerald-800/40 transition-all">
+            <label className="flex items-center gap-2 px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-400 font-bold cursor-pointer hover:border-sky-800/40 transition-all">
               <Upload size={14} />
               <span className="truncate max-w-[160px]">{newLogo ? newLogo.name : "Logo seç (opsiyonel)"}</span>
               <input
@@ -244,7 +244,7 @@ export default function SponsorsAdmin() {
             <button
               type="submit"
               disabled={adding || !newName.trim()}
-              className="px-5 py-2 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-zinc-950 rounded-xl text-xs font-extrabold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="px-5 py-2 bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-zinc-950 rounded-xl text-xs font-extrabold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {adding ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               Ekle
@@ -272,7 +272,7 @@ export default function SponsorsAdmin() {
                 key={s.id}
                 className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${
                   s.is_badge_sponsor
-                    ? "bg-emerald-950/10 border-[#8BE92C]/50 ring-1 ring-[#8BE92C]/20"
+                    ? "bg-sky-950/10 border-[#e7c878]/50 ring-1 ring-[#e7c878]/20"
                     : "bg-zinc-900/10 border-zinc-800/40"
                 }`}
               >
@@ -291,8 +291,8 @@ export default function SponsorsAdmin() {
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-semibold text-zinc-100 truncate">{s.name}</p>
                     {s.is_badge_sponsor && (
-                      <span className="inline-flex items-center gap-1 shrink-0 text-[9px] font-black text-[#8BE92C] bg-emerald-950/40 border border-[#8BE92C]/30 rounded px-1.5 py-0.5 uppercase tracking-wider">
-                        <Star size={9} className="fill-[#8BE92C]" /> Ana Sponsor
+                      <span className="inline-flex items-center gap-1 shrink-0 text-[9px] font-black text-[#e7c878] bg-sky-950/40 border border-[#e7c878]/30 rounded px-1.5 py-0.5 uppercase tracking-wider">
+                        <Star size={9} className="fill-[#e7c878]" /> Ana Sponsor
                       </span>
                     )}
                   </div>
@@ -317,19 +317,19 @@ export default function SponsorsAdmin() {
                     }
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                       s.is_badge_sponsor
-                        ? "bg-[#8BE92C]/15 text-[#8BE92C] border-[#8BE92C]/40 hover:bg-[#8BE92C]/25"
-                        : "bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-emerald-800/40 hover:text-emerald-400"
+                        ? "bg-[#e7c878]/15 text-[#e7c878] border-[#e7c878]/40 hover:bg-[#e7c878]/25"
+                        : "bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-sky-800/40 hover:text-[#e7c878]"
                     }`}
                   >
                     {togglingBadgeId === s.id ? (
                       <Loader2 size={14} className="animate-spin" />
                     ) : (
-                      <Star size={14} className={s.is_badge_sponsor ? "fill-[#8BE92C]" : ""} />
+                      <Star size={14} className={s.is_badge_sponsor ? "fill-[#e7c878]" : ""} />
                     )}
                     {s.is_badge_sponsor ? "Ana Sponsor" : "Ana Sponsor Yap"}
                   </button>
                   <label
-                    className={`flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-400 border border-emerald-800/40 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 bg-sky-950/40 hover:bg-sky-950/70 text-[#e7c878] border border-sky-800/40 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       uploadingId === s.id ? "opacity-60 pointer-events-none" : ""
                     }`}
                   >
