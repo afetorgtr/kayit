@@ -151,7 +151,7 @@ export default function AdminDashboard() {
     const rows = filteredRegistrants.map((r) => [
       r.name_surname,
       r.birth_date,
-      `'${r.tc_no}`, // Add single quote to prevent Excel truncation/sci notation
+      r.tc_no ? `'${r.tc_no}` : "", // Add single quote to prevent Excel truncation/sci notation
       r.profession,
       r.position,
       r.company,
@@ -160,9 +160,12 @@ export default function AdminDashboard() {
       new Date(r.created_at).toLocaleString("tr-TR")
     ]);
 
-    const csvContent = 
+    // Optional fields can be null (only name/email/phone are required), so coerce every
+    // cell to a string before escaping — otherwise null.replace() throws and the whole
+    // export silently fails (the download button appears to "do nothing").
+    const csvContent =
       BOM +
-      [headers.join(";"), ...rows.map((e) => e.map(val => `"${val.replace(/"/g, '""')}"`).join(";"))].join("\n");
+      [headers.join(";"), ...rows.map((e) => e.map((val) => `"${String(val ?? "").replace(/"/g, '""')}"`).join(";"))].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
