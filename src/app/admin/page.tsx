@@ -24,6 +24,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { PARTICIPANT_ROLES } from "@/lib/roles";
+import * as XLSX from "xlsx";
 
 interface Registrant {
   id: string;
@@ -131,11 +132,9 @@ export default function AdminDashboard() {
     });
 
   // Export to CSV Function
-  const exportToCSV = () => {
+  const exportToExcel = () => {
     if (filteredRegistrants.length === 0) return;
 
-    // CSV headers (use UTF-8 BOM to display Turkish characters correctly in Excel)
-    const BOM = "\uFEFF";
     const headers = [
       "Adı Soyadı",
       "Doğum Tarihi",
@@ -148,33 +147,28 @@ export default function AdminDashboard() {
       "Kayıt Tarihi"
     ];
 
+    // Only name/email/phone are guaranteed; coerce optional fields to "" so empty cells
+    // stay blank. TC No is kept as a string so Excel treats it as text (no sci-notation).
     const rows = filteredRegistrants.map((r) => [
-      r.name_surname,
-      r.birth_date,
-      r.tc_no ? `'${r.tc_no}` : "", // Add single quote to prevent Excel truncation/sci notation
-      r.profession,
-      r.position,
-      r.company,
-      r.email,
-      r.phone,
-      new Date(r.created_at).toLocaleString("tr-TR")
+      r.name_surname || "",
+      r.birth_date || "",
+      r.tc_no || "",
+      r.profession || "",
+      r.position || "",
+      r.company || "",
+      r.email || "",
+      r.phone || "",
+      new Date(r.created_at).toLocaleString("tr-TR"),
     ]);
 
-    // Optional fields can be null (only name/email/phone are required), so coerce every
-    // cell to a string before escaping — otherwise null.replace() throws and the whole
-    // export silently fails (the download button appears to "do nothing").
-    const csvContent =
-      BOM +
-      [headers.join(";"), ...rows.map((e) => e.map((val) => `"${String(val ?? "").replace(/"/g, '""')}"`).join(";"))].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `afet_sempozyum_katilimcilar_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    ws["!cols"] = [
+      { wch: 26 }, { wch: 13 }, { wch: 14 }, { wch: 26 }, { wch: 22 },
+      { wch: 28 }, { wch: 26 }, { wch: 15 }, { wch: 18 },
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Katılımcılar");
+    XLSX.writeFile(wb, `afet_sempozyum_katilimcilar_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
   const toggleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -429,11 +423,11 @@ export default function AdminDashboard() {
           {/* Action Buttons */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-end">
             <button
-              onClick={exportToCSV}
+              onClick={exportToExcel}
               disabled={filteredRegistrants.length === 0}
               className="flex items-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl text-xs font-bold transition-all border border-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Download size={14} /> Excel/CSV İndir
+              <Download size={14} /> Excel İndir
             </button>
             <button
               onClick={handlePrintSelected}
