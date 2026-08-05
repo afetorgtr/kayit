@@ -32,23 +32,17 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
 
   return (
     <div className="badge-card relative overflow-hidden rounded-xl shadow-2xl print:shadow-none print:rounded-none flex flex-col bg-gradient-to-b from-[#0b1a33] via-[#071228] to-[#04060f]">
-      {/* Header — AAD lockup + event title lockup */}
-      <div className="relative px-4 pt-[7mm] pb-[4mm] text-center">
-        {/* Top gold hairline accent */}
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
+      {/* Header — official symposium banner, cropped to the logos + title lockup */}
+      <div className="relative">
+        <div className="absolute inset-x-0 top-0 h-[2px] z-10 bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo-yeni.png"
-          alt="Afet Araştırmaları Derneği"
-          className="h-[8mm] w-auto object-contain mx-auto mb-[4mm]"
+          src="/yaka.jpeg"
+          alt="Afetlerde Büyük Veri Yönetimi Sempozyumu"
+          className="w-full h-[42mm] object-cover object-top"
         />
-        <span className="block text-[11px] font-black uppercase tracking-[0.3em] text-white">AFETLERDE</span>
-        <span className="block text-[24px] font-black uppercase leading-[1.0] text-white">BÜYÜK VERİ YÖNETİMİ</span>
-        <div className="relative mx-auto my-[2mm] h-[1.5px] w-[78%] bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
-        <span className="block text-[12px] font-bold uppercase tracking-[0.42em] text-[#e7c878]">SEMPOZYUMU</span>
-        <span className="block mt-[1.5mm] text-[8.5px] font-bold uppercase tracking-[0.18em] text-[#e7c878]/85">
-          15 – 16 Ağustos 2026 · Ankara
-        </span>
+        {/* Fade the crop edge into the card body */}
+        <div className="absolute inset-x-0 bottom-0 h-[7mm] bg-gradient-to-t from-[#04060f] to-transparent" />
       </div>
 
       {/* Participant — name inside a white frame */}
