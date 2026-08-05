@@ -45,8 +45,19 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
         <div className="absolute inset-x-0 bottom-0 h-[7mm] bg-gradient-to-t from-[#04060f] to-transparent" />
       </div>
 
-      {/* Participant — name inside a white frame; event date & venue pinned at the bottom */}
+      {/* Participant — name inside a white frame; event date & venue above the name */}
       <div className="relative flex-1 mx-[7%] mb-[3mm] bg-white rounded-2xl ring-1 ring-black/5 shadow-lg flex flex-col text-center overflow-hidden">
+        {/* Date & venue — below the title, above the name */}
+        <div className="border-b border-zinc-200/80 px-3 py-[2.5mm] flex flex-col items-center gap-[1mm]">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#0a1426]">
+            <Calendar size={12} className="text-[#c9a24b] shrink-0" />
+            15 – 16 Ağustos 2026
+          </div>
+          <div className="flex items-center gap-1.5 text-[9px] text-zinc-500 font-medium">
+            <MapPin size={11} className="text-[#c9a24b] shrink-0" />
+            Ankara Ticaret Odası Meclis Salonu, Söğütözü / Ankara
+          </div>
+        </div>
         <div className="flex-1 flex flex-col items-center justify-center px-4 gap-2">
           <h1 className="text-[27px] leading-[1.03] font-black uppercase tracking-tight text-[#0a1426] break-words">
             {r.name_surname}
@@ -57,17 +68,6 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
           {secondary && (
             <p className="text-[9.5px] uppercase tracking-wider text-zinc-500 font-medium">{secondary}</p>
           )}
-        </div>
-        {/* Date & venue */}
-        <div className="border-t border-zinc-200/80 px-3 py-[2.5mm] flex flex-col items-center gap-[1mm]">
-          <div className="flex items-center gap-1.5 text-[10.5px] font-bold text-[#0a1426]">
-            <Calendar size={12} className="text-[#c9a24b] shrink-0" />
-            15 – 16 Ağustos 2026 · 09:00 – 18:00
-          </div>
-          <div className="flex items-center gap-1.5 text-[9px] text-zinc-500 font-medium">
-            <MapPin size={11} className="text-[#c9a24b] shrink-0" />
-            Ankara Ticaret Odası Meclis Salonu, Söğütözü / Ankara
-          </div>
         </div>
       </div>
 
