@@ -236,7 +236,10 @@ export default function RegisterForm() {
     }
   };
 
+  const PROGRAM_URL = "https://www.afet.org.tr/wp-content/uploads/2026/08/program.pdf";
+
   const announcements = [
+    { label: "Sempozyum Programı", href: PROGRAM_URL, icon: Calendar },
     { label: "Bilgilendirme ve Davet Metni", href: "/duyuru-metni.pdf", icon: FileText },
     { label: "Bilgi Notu (30 Haziran 2026)", href: "/bilgi-notu.pdf", icon: FileText },
   ];
@@ -448,7 +451,15 @@ export default function RegisterForm() {
                     hazırlanıp teslim edilecektir.
                   </p>
                 </div>
-                <div className="pt-4">
+                <div className="pt-4 flex flex-col items-center gap-3">
+                  <a
+                    href={PROGRAM_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-[#241a05] rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-[#e7c878]/10"
+                  >
+                    <FileText size={14} /> Sempozyum Programını İnceleyiniz
+                  </a>
                   <button
                     onClick={() => setSuccess(false)}
                     className="px-6 py-2.5 bg-[#e7c878]/10 hover:bg-[#e7c878]/20 text-[#e7c878] border border-[#e7c878]/25 rounded-xl text-xs font-bold transition-all"
