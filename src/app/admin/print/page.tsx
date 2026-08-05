@@ -64,12 +64,18 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
         {r.role || "Katılımcı"}
       </div>
 
-      {/* Footer — white strip: main sponsor left, AAD crow right */}
-      <div className="relative h-[13mm] bg-white flex items-center justify-between px-[5mm]">
+      {/* Supporters strip — official "Destekleyen Kurum ve Kuruluşlar" logos */}
+      <div className="bg-white px-[5mm] pt-[2mm] pb-[0.5mm] flex items-center justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/destek.jpg" alt="Destekleyen Kurum ve Kuruluşlar" className="w-full h-auto object-contain" />
+      </div>
+
+      {/* Footer — white strip: lanyard sponsor left, AAD crow right */}
+      <div className="relative h-[13mm] bg-white flex items-center justify-between px-[5mm] border-t border-zinc-200/70">
         {sponsor ? (
           <div className="flex flex-col items-start gap-0.5 max-w-[58%]">
             <span className="text-[6px] font-bold uppercase tracking-[0.14em] text-zinc-400 leading-none">
-              Ana Sponsor
+              Yaka Kartı Sponsoru
             </span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={sponsor.logo_url} alt={sponsor.name} title={sponsor.name} className="h-[7mm] max-w-[42mm] w-auto object-contain" />
