@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { renderConfirmationEmail } from '@/lib/emails';
 
 // T.C. Kimlik validation server-side sanity check
 function validateTCNo(tc: string): boolean {
@@ -82,52 +83,10 @@ export async function POST(request: Request) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: 'Sempozyum Kayıt <onay@afet.org.tr>', // Note: Must verify domain on Resend. If not verified, fallback to testing email
+          from: 'Afetlerde Büyük Veri Yönetimi Sempozyumu <onay@afet.org.tr>',
           to: email,
-          subject: 'Afetlerde Büyük Veri Yönetimi Sempozyumu Kayıt Onayı',
-          html: `
-            <div style="font-family: sans-serif; background-color: #030908; color: #f4f4f5; padding: 40px 20px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid #064e3b;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <div style="display: inline-block; padding: 10px 20px; background-color: #064e3b; border-radius: 8px; color: #8be92c; font-weight: bold; font-size: 20px; letter-spacing: 1px;">
-                  AAD
-                </div>
-                <h2 style="color: #ffffff; margin-top: 15px; margin-bottom: 5px;">Afet Araştırmaları Derneği</h2>
-                <p style="color: #a1a1aa; font-size: 14px; margin: 0;">Sempozyum Düzenleme Kurulu</p>
-              </div>
-              
-              <div style="background-color: #18181b; padding: 25px; border-radius: 12px; border: 1px solid #27272a;">
-                <h3 style="color: #8be92c; margin-top: 0; margin-bottom: 15px;">Kayıt Onay Mesajı</h3>
-                <p style="font-size: 16px; line-height: 1.6; color: #e4e4e7;">Sayın <strong>${name_surname}</strong>,</p>
-                <p style="font-size: 15px; line-height: 1.6; color: #d4d4d8;">
-                  15-16 Ağustos 2026 tarihlerinde Ankara Ticaret Odası Meclis Salonu'nda gerçekleştirilecek <strong>“Afetlerde Büyük Veri Yönetimi Sempozyumu”</strong> için kaydınız başarıyla tamamlanmıştır.
-                </p>
-                
-                <hr style="border: 0; border-top: 1px solid #27272a; margin: 20px 0;">
-                
-                <h4 style="color: #ffffff; margin-top: 0; margin-bottom: 10px;">Etkinlik Detayları:</h4>
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #d4d4d8;">
-                  <tr>
-                    <td style="padding: 6px 0; font-weight: bold; color: #a1a1aa; width: 100px;">Tarih:</td>
-                    <td style="padding: 6px 0;">15-16 Ağustos 2026</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 6px 0; font-weight: bold; color: #a1a1aa;">Yer:</td>
-                    <td style="padding: 6px 0;">Ankara Ticaret Odası (ATO) Meclis Salonu, Ankara</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 6px 0; font-weight: bold; color: #a1a1aa;">Kayıt ID:</td>
-                    <td style="padding: 6px 0; font-family: monospace; color: #8be92c;">${data.id}</td>
-                  </tr>
-                </table>
-              </div>
-
-              <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #71717a; line-height: 1.6;">
-                <p>Ulaşım ve mekan bilgileri için <a href="${appUrl}" style="color: #8be92c; text-decoration: none;">etkinlik web sayfasını</a> ziyaret edebilirsiniz.</p>
-                <p>Sorularınız için: <a href="mailto:bilgi@afet.org.tr" style="color: #8be92c; text-decoration: none;">bilgi@afet.org.tr</a></p>
-                <p style="margin-top: 20px; font-size: 10px; color: #52525b;">Bu etkinlik T.C. İçişleri Bakanlığı Sivil Toplumla İlişkiler Genel Müdürlüğü tarafından desteklenmektedir.</p>
-              </div>
-            </div>
-          `
+          subject: 'Kaydınız Alınmıştır — Afetlerde Büyük Veri Yönetimi Sempozyumu',
+          html: renderConfirmationEmail(name_surname),
         });
       } catch (emailErr) {
         // Log email error but do not fail the request since database registration succeeded
