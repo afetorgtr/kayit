@@ -236,7 +236,7 @@ export default function RegisterForm() {
     }
   };
 
-  const PROGRAM_URL = "https://www.afet.org.tr/wp-content/uploads/2026/08/program.pdf";
+  const PROGRAM_URL = "https://www.afet.org.tr/wp-content/uploads/2026/08/buyukveriprogram.pdf";
 
   const announcements = [
     { label: "Sempozyum Programı", href: PROGRAM_URL, icon: Calendar },

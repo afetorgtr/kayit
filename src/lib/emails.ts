@@ -7,7 +7,7 @@ export const EVENT = {
   dateRange: '15 – 16 Ağustos 2026',
   time: '09:00 – 18:00',
   venue: "Ankara Ticaret Odası Meclis Salonu, Söğütözü / Çankaya, Ankara",
-  programUrl: 'https://www.afet.org.tr/wp-content/uploads/2026/08/program.pdf',
+  programUrl: 'https://www.afet.org.tr/wp-content/uploads/2026/08/buyukveriprogram.pdf',
   logoUrl: 'https://kayit.vercel.app/logo-yeni.png',
   website: 'https://www.afet.org.tr',
   contactOrg: 'Valör Organizasyon',
