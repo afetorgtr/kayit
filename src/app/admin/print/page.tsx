@@ -37,7 +37,7 @@ function BadgeCard({ r, sponsor }: { r: Registrant; sponsor: BadgeSponsor | null
         <div className="absolute inset-x-0 top-0 h-[2px] z-10 bg-gradient-to-r from-transparent via-[#e7c878] to-transparent" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/yeni-yaka.jpg"
+          src="/yaka2.png"
           alt="Afetlerde Büyük Veri Yönetimi Sempozyumu"
           className="w-full h-auto block"
         />
@@ -189,11 +189,12 @@ export default function PrintBadges() {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-900 font-sans antialiased">
-      {/* Exact lanyard page size (90 × 130 mm) + print color fidelity */}
+      {/* Lanyard card: 100 × 140 mm trim + 3 mm bleed each side = 106 × 146 mm page.
+          Backgrounds are full-bleed; trimming to 100 × 140 leaves no white edge. */}
       <style dangerouslySetInnerHTML={{ __html: `
-        .badge-card { width: 90mm; height: 130mm; }
+        .badge-card { width: 106mm; height: 146mm; }
 
-        @page { size: 90mm 130mm; margin: 0; }
+        @page { size: 106mm 146mm; margin: 0; }
 
         @media print {
           html, body {
@@ -234,7 +235,7 @@ export default function PrintBadges() {
           <div>
             <h1 className="text-xs font-bold">Yaka Kartı Baskı Önizleme</h1>
             <p className="text-[10px] text-zinc-400">
-              {registrants.length} adet kart · 90 × 130 mm
+              {registrants.length} adet kart · 100 × 140 mm (+3mm taşma payı)
               {badgeSponsor ? ` · Sponsor: ${badgeSponsor.name}` : ""}
             </p>
           </div>
