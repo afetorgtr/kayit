@@ -65,6 +65,21 @@ export default function RegisterForm() {
       .catch(() => setSponsors([]));
   }, []);
 
+  // Registration cap: when full, the form area shows the "kontenjan doldu" message.
+  const [registrationOpen, setRegistrationOpen] = useState(true);
+
+  useEffect(() => {
+    // Optional preview: /?kontenjan=dolu shows the full state without reaching the cap.
+    if (new URLSearchParams(window.location.search).get("kontenjan") === "dolu") {
+      setRegistrationOpen(false);
+      return;
+    }
+    fetch("/api/capacity")
+      .then((res) => (res.ok ? res.json() : { open: true }))
+      .then((data) => setRegistrationOpen(data.open !== false))
+      .catch(() => setRegistrationOpen(true));
+  }, []);
+
   const [formData, setFormData] = useState({
     name_surname: "",
     birth_date: "",
@@ -158,6 +173,8 @@ export default function RegisterForm() {
 
       const data = await res.json();
       if (!res.ok) {
+        // Cap reached between page load and submit → switch to the "full" message.
+        if (data.closed) setRegistrationOpen(false);
         throw new Error(data.message || "Bir hata oluştu.");
       }
 
@@ -439,7 +456,34 @@ export default function RegisterForm() {
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#c9a24b]" />
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#5bc0e8]/5 rounded-full blur-2xl pointer-events-none" />
 
-            {success ? (
+            {!registrationOpen ? (
+              <div className="text-center py-10 space-y-5 my-auto px-2">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-[#e7c878]/12 border border-[#e7c878]/40 text-[#e7c878] text-[10px] font-black uppercase tracking-[0.15em]">
+                  Kontenjan Doldu
+                </div>
+                <div className="w-16 h-16 bg-[#e7c878]/10 border-2 border-[#e7c878]/50 rounded-full flex items-center justify-center mx-auto text-[#e7c878]">
+                  <CheckCircle size={34} />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-black">Kayıtlar Sona Erdi</h2>
+                  <p className="text-slate-300 text-sm max-w-sm mx-auto leading-relaxed">
+                    Etkinlik kayıt kontenjanımız dolmuştur. Sempozyumumuza gösterdiğiniz ilgi
+                    nedeniyle teşekkür ederiz.
+                  </p>
+                  <p className="text-slate-400 text-xs">Saygılarımızla.</p>
+                </div>
+                <div className="pt-2">
+                  <a
+                    href={PROGRAM_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#c9a24b] via-[#f7e3a8] to-[#e7c878] hover:brightness-110 text-[#241a05] rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-[#e7c878]/10"
+                  >
+                    <FileText size={14} /> Sempozyum Programını İnceleyiniz
+                  </a>
+                </div>
+              </div>
+            ) : success ? (
               <div className="text-center py-12 space-y-6 my-auto">
                 <div className="w-16 h-16 bg-[#e7c878]/10 border border-[#e7c878]/30 rounded-full flex items-center justify-center mx-auto text-[#e7c878]">
                   <CheckCircle size={36} />
