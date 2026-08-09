@@ -51,6 +51,14 @@ export default function AdminDashboard() {
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [nameSort, setNameSort] = useState<"asc" | "desc" | null>(null);
   const [contactUnread, setContactUnread] = useState(0);
+  const [campaign, setCampaign] = useState<{
+    exists: boolean;
+    sent: number;
+    completed: number;
+    pending: number;
+    completionRate: number;
+    sentAt?: string;
+  } | null>(null);
 
   // Check session storage on mount
   useEffect(() => {
@@ -90,6 +98,17 @@ export default function AdminDashboard() {
         }
       } catch {
         // Non-critical: the badge simply won't show a count.
+      }
+
+      // Reminder campaign stats (best-effort) — shown only if a campaign was sent.
+      try {
+        const kRes = await fetch("/api/admin/reminder-campaign", { headers: { Authorization: pwdToVerify } });
+        if (kRes.ok) {
+          const kData = await kRes.json();
+          if (kData.exists) setCampaign(kData);
+        }
+      } catch {
+        // Non-critical.
       }
     } catch (err: any) {
       setLoginError(err.message || "Giriş başarısız oldu.");
@@ -404,6 +423,43 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Reminder campaign tracker */}
+        {campaign?.exists && (
+          <div className="p-5 bg-gradient-to-r from-[#e7c878]/[0.06] to-transparent border border-[#e7c878]/20 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-[#e7c878]/10 border border-[#e7c878]/20 flex items-center justify-center text-[#e7c878]">
+                <Mail size={20} />
+              </div>
+              <div>
+                <h3 className="text-xs text-[#e7c878] font-black uppercase tracking-wider">
+                  Bilgi Tamamlama Kampanyası
+                </h3>
+                <p className="text-[10px] text-zinc-500 mt-0.5">
+                  {campaign.sentAt ? new Date(campaign.sentAt).toLocaleString("tr-TR") : ""} · Kurum / Görev / Meslek hatırlatması
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-6 md:gap-8 self-end md:self-auto">
+              <div className="text-center">
+                <p className="text-2xl font-black text-zinc-100">{campaign.sent}</p>
+                <p className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Gönderilen</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-black text-emerald-400">{campaign.completed}</p>
+                <p className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Tamamlayan</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-black text-[#e7c878]">{campaign.pending}</p>
+                <p className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Bekleyen</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-black text-sky-400">%{campaign.completionRate}</p>
+                <p className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Doldurma</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Action Bar */}
         <div className="p-4 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">

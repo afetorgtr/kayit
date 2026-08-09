@@ -19,18 +19,23 @@ export const EVENT = {
 // Optional fields we nudge participants to complete (badge-relevant). name/email/phone
 // are already required at registration, so they never appear here.
 export const OPTIONAL_FIELDS: { key: string; label: string }[] = [
-  { key: 'tc_no', label: 'T.C. Kimlik Numarası' },
   { key: 'company', label: 'Çalıştığınız Kurum' },
+  { key: 'position', label: 'Göreviniz (Pozisyon)' },
   { key: 'profession', label: 'Meslek' },
-  { key: 'position', label: 'Kurumsal Pozisyon' },
 ];
+
+function isEmpty(v: unknown): boolean {
+  return v === null || v === undefined || String(v).trim() === '';
+}
 
 // Returns the human labels of the optional fields left blank for a registrant.
 export function getMissingFieldLabels(r: Record<string, unknown>): string[] {
-  return OPTIONAL_FIELDS.filter((f) => {
-    const v = r[f.key];
-    return v === null || v === undefined || String(v).trim() === '';
-  }).map((f) => f.label);
+  return OPTIONAL_FIELDS.filter((f) => isEmpty(r[f.key])).map((f) => f.label);
+}
+
+// Returns the keys of the optional fields left blank (used for campaign tracking).
+export function getMissingFieldKeys(r: Record<string, unknown>): string[] {
+  return OPTIONAL_FIELDS.filter((f) => isEmpty(r[f.key])).map((f) => f.key);
 }
 
 function escapeHtml(s: string): string {
@@ -107,15 +112,15 @@ export function renderIncompleteEmail(name: string, missingLabels: string[], com
     .map((l) => `&#9888;&nbsp; ${escapeHtml(l)}`)
     .join('<br>');
   const inner = `
-    <div style="width:60px;height:60px;line-height:56px;margin:0 auto 18px;background:#2a2213;border:2px solid #e7c878;border-radius:30px;color:#e7c878;font-size:34px;font-weight:800;text-align:center;">!</div>
-    <h1 style="font-size:23px;font-weight:800;color:#ffffff;text-align:center;margin:0 0 6px;">Kaydınızda Eksik Bilgiler Var</h1>
-    <p style="font-size:14px;color:#9fb0cc;text-align:center;margin:0 0 24px;">Yaka kartınızın eksiksiz hazırlanabilmesi için birkaç bilgiye daha ihtiyacımız var.</p>
+    <div style="width:60px;height:60px;line-height:60px;margin:0 auto 18px;background:#12233f;border:2px solid #e7c878;border-radius:30px;color:#e7c878;font-size:30px;font-weight:700;text-align:center;">&#9998;</div>
+    <h1 style="font-size:22px;font-weight:800;color:#ffffff;text-align:center;margin:0 0 6px;">Kurum ve Görev Bilgilerinizi Tamamlar mısınız?</h1>
+    <p style="font-size:14px;color:#9fb0cc;text-align:center;margin:0 0 24px;">Sempozyuma yaşanan yoğun ilgi nedeniyle katılımcı bilgilerinin eksiksiz olması önem taşımaktadır.</p>
     <p style="font-size:14px;line-height:1.7;color:#c6d2e6;margin:0 0 16px;">Sayın <strong style="color:#ffffff;">${safeName}</strong>,</p>
-    <p style="font-size:14px;line-height:1.75;color:#aab6cc;margin:0 0 20px;">Sempozyum kaydınız alındı. Ancak yaka kartınızın doğru ve eksiksiz hazırlanabilmesi için aşağıdaki alanların tamamlanması gerekiyor:</p>
+    <p style="font-size:14px;line-height:1.75;color:#aab6cc;margin:0 0 20px;">Sempozyum kaydınız alınmıştır. Yoğun katılım nedeniyle katılımcı listesinin ve yaka kartlarınızın eksiksiz hazırlanabilmesi için aşağıdaki bilgileri tamamlamanızı rica ederiz:</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#08111f;border:1px solid #3a2f16;border-left:3px solid #e7c878;border-radius:12px;margin:0 0 22px;">
       <tr><td style="padding:16px 18px;font-size:14px;line-height:2.1;color:#e6c07a;font-weight:700;">${items}</td></tr>
     </table>
-    <p style="font-size:13px;line-height:1.75;color:#aab6cc;margin:0 0 24px;">Aşağıdaki butondan bilgilerinizi tamamlayabilirsiniz. Katılımınız için kaydınızın eksiksiz olması önemlidir.</p>
+    <p style="font-size:13px;line-height:1.75;color:#aab6cc;margin:0 0 24px;">Bilgilerinizi aşağıdaki butondan birkaç saniyede güncelleyebilirsiniz. Katkınız için teşekkür ederiz.</p>
     ${goldButton(completeUrl, 'Bilgilerimi Tamamla')}
     <p style="font-size:12px;line-height:1.7;color:#7e8ca6;text-align:center;margin:22px 0 0;">Sempozyum programını incelemek için: <a href="${EVENT.programUrl}" style="color:#e7c878;text-decoration:none;font-weight:700;">Program (PDF)</a></p>`;
   return emailShell(inner);
