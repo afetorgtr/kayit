@@ -4,13 +4,16 @@ import { Resend } from 'resend';
 import { renderIncompleteEmail, getMissingFieldLabels } from '@/lib/emails';
 import { makeEditToken } from '@/lib/editToken';
 
-// Allow a little more time for the batch send on Vercel.
 export const maxDuration = 60;
 
 const resendApiKey = process.env.RESEND_API_KEY || '';
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-// Authorized either by Vercel Cron (Bearer CRON_SECRET) or a manual admin trigger.
+// "Sent once" state is kept in a private Storage object instead of a DB column, so no
+// schema migration (dashboard access) is needed — the service_role client manages it.
+const STATE_BUCKET = 'reminder-state';
+const STATE_KEY = 'sent.json';
+
 function authorized(request: Request): boolean {
   const auth = request.headers.get('authorization') || '';
   const cronSecret = process.env.CRON_SECRET;
@@ -26,6 +29,33 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
+async function ensureBucket(): Promise<void> {
+  const { error } = await supabaseAdmin.storage.createBucket(STATE_BUCKET, { public: false });
+  // Ignore "already exists"; anything else is non-fatal (upload will surface real issues).
+  if (error && !/exist/i.test(error.message || '')) {
+    console.warn('reminder-state bucket create:', error.message);
+  }
+}
+
+async function readSentIds(): Promise<Set<string>> {
+  const { data, error } = await supabaseAdmin.storage.from(STATE_BUCKET).download(STATE_KEY);
+  if (error || !data) return new Set();
+  try {
+    const arr = JSON.parse(await data.text());
+    return new Set(Array.isArray(arr) ? (arr as string[]) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+async function writeSentIds(ids: string[]): Promise<void> {
+  const body = Buffer.from(JSON.stringify(Array.from(new Set(ids))));
+  const { error } = await supabaseAdmin.storage
+    .from(STATE_BUCKET)
+    .upload(STATE_KEY, body, { upsert: true, contentType: 'application/json' });
+  if (error) console.error('reminder-state write:', error.message);
+}
+
 // Daily reminder: e-mail participants whose optional info is still missing, exactly once,
 // starting 1 day after they registered. Existing (older) incomplete records are caught on
 // the first run; new ones become eligible a day after registering.
@@ -37,13 +67,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Resend yapılandırılmamış.' }, { status: 500 });
   }
 
-  const base = process.env.NEXT_PUBLIC_APP_URL || 'https://kayit.vercel.app';
+  const base = 'https://kayit.vercel.app'; // canonical domain (do not trust NEXT_PUBLIC_APP_URL)
   const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); // registered ≥ 1 day ago
+
+  await ensureBucket();
+  const sent = await readSentIds();
 
   const { data, error } = await supabaseAdmin
     .from('registrants')
     .select('id, name_surname, email, phone, tc_no, birth_date, profession, position, company, created_at')
-    .is('reminder_sent_at', null)
     .lte('created_at', cutoff);
 
   if (error) {
@@ -51,12 +83,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ message: 'Kayıtlar okunamadı.', error: error.message }, { status: 500 });
   }
 
-  const rows = data || [];
+  // Only registrants not already processed by a previous run.
+  const rows = (data || []).filter((r) => !sent.has(r.id as string));
   const needsEmail = rows
     .map((r) => ({ r, missing: getMissingFieldLabels(r) }))
     .filter((x) => x.missing.length > 0);
 
-  // Preview mode: report who would be e-mailed without sending or marking anything.
   const dry = new URL(request.url).searchParams.get('dry') === '1';
   if (dry) {
     return NextResponse.json({
@@ -79,31 +111,26 @@ export async function GET(request: Request) {
     ),
   }));
 
-  let sent = 0;
+  let reminded = 0;
   try {
     for (const c of chunk(payload, 100)) {
       if (c.length === 0) continue;
       await resend.batch.send(c);
-      sent += c.length;
+      reminded += c.length;
     }
   } catch (err) {
     console.error('Reminder batch send error:', err);
-    return NextResponse.json({ message: 'E-posta gönderiminde hata.', sent }, { status: 500 });
+    return NextResponse.json({ message: 'E-posta gönderiminde hata.', reminded }, { status: 500 });
   }
 
   // Mark every processed row (emailed or already complete) so each is handled only once.
-  const processedIds = rows.map((r) => r.id);
-  if (processedIds.length > 0) {
-    const { error: markErr } = await supabaseAdmin
-      .from('registrants')
-      .update({ reminder_sent_at: new Date().toISOString() })
-      .in('id', processedIds);
-    if (markErr) console.error('Reminder mark error:', markErr);
+  if (rows.length > 0) {
+    await writeSentIds([...sent, ...rows.map((r) => r.id as string)]);
   }
 
   return NextResponse.json({
     processed: rows.length,
-    reminded: sent,
+    reminded,
     already_complete: rows.length - needsEmail.length,
   });
 }

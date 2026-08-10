@@ -72,7 +72,9 @@ export async function POST(request: Request) {
   const url = new URL(request.url);
   const dry = url.searchParams.get('dry') === '1';
   const force = url.searchParams.get('force') === '1';
-  const base = process.env.NEXT_PUBLIC_APP_URL || 'https://kayit.vercel.app';
+  // Hardcoded canonical domain — never trust NEXT_PUBLIC_APP_URL (it was mis-set to a
+  // different project's domain, which broke the "Bilgilerimi Tamamla" links).
+  const base = 'https://kayit.vercel.app';
 
   const { data, error } = await supabaseAdmin
     .from('registrants')
