@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { renderConfirmationEmail } from '@/lib/emails';
-import { REGISTRATION_CAP } from '@/lib/capacity';
+import { REGISTRATION_CAP, isUncappedHost } from '@/lib/capacity';
 
 // T.C. Kimlik validation server-side sanity check
 function validateTCNo(tc: string): boolean {
@@ -48,18 +48,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Geçersiz T.C. Kimlik Numarası.' }, { status: 400 });
     }
 
-    // Enforce the registration cap (server-side guard against exceeding the limit).
-    const { count: currentCount } = await supabaseAdmin
-      .from('registrants')
-      .select('*', { count: 'exact', head: true });
-    if ((currentCount || 0) >= REGISTRATION_CAP) {
-      return NextResponse.json(
-        {
-          message: 'Etkinlik kayıt kontenjanımız dolmuştur. Sempozyumumuza gösterdiğiniz ilgi nedeniyle teşekkür ederiz.',
-          closed: true,
-        },
-        { status: 403 }
-      );
+    // Enforce the registration cap (server-side guard) — EXCEPT on the door-registration
+    // mirror (yedekkayit.vercel.app), which stays open for on-site walk-in registration.
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
+    if (!isUncappedHost(host)) {
+      const { count: currentCount } = await supabaseAdmin
+        .from('registrants')
+        .select('*', { count: 'exact', head: true });
+      if ((currentCount || 0) >= REGISTRATION_CAP) {
+        return NextResponse.json(
+          {
+            message: 'Etkinlik kayıt kontenjanımız dolmuştur. Sempozyumumuza gösterdiğiniz ilgi nedeniyle teşekkür ederiz.',
+            closed: true,
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // Insert into Supabase using admin client to bypass RLS policies safely
